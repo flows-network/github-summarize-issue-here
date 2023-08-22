@@ -46,13 +46,14 @@ async fn handler(owner: &str, repo: &str, payload: EventPayload) {
         }
         match e.comment.body {
             Some(body) => {
+                log::error!("comment: {}", body);
                 if !body.starts_with(&format!("@{trigger_phrase}")) {
                     std::process::exit(1);
                 }
             }
             None => std::process::exit(1),
         }
-
+        let comment_id = e.comment.id;
         let openai = OpenAIFlows::new();
         let issue_creator_name = e.issue.user.login;
         let issue_title = e.issue.title;
@@ -81,7 +82,9 @@ async fn handler(owner: &str, repo: &str, payload: EventPayload) {
             .await
         {
             Ok(comments_page) => {
+                let mut count = 0;
                 for comment in comments_page.items {
+                    count += 1;
                     let comment_body = match &comment.body {
                         Some(body) => squeeze_fit_remove_quoted(body, "```", 300, 0.6),
                         None => "".to_string(),
@@ -91,6 +94,8 @@ async fn handler(owner: &str, repo: &str, payload: EventPayload) {
 
                     all_text_from_issue.push_str(&commenter_input);
                 }
+
+                log::error!("{} comments found", count);
             }
 
             Err(_e) => log::error!("Error getting comments from issue: {}", _e),
@@ -134,7 +139,7 @@ async fn handler(owner: &str, repo: &str, payload: EventPayload) {
             issue_title, issue_html_url, summary, owner
         );
         // issues.update_comment(pull_number, resp).await.unwrap();
-        match issue_handle.create_comment(issue_number, resp).await {
+        match issue_handle.update_comment(comment_id, resp).await {
             Err(error) => {
                 log::error!("Error posting resp: {}", error);
             }
