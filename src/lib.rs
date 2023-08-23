@@ -37,7 +37,6 @@ async fn handler(owner: &str, repo: &str, payload: EventPayload) {
 
     let octocrab = get_octo(&GithubLogin::Default);
     let issue_handle = octocrab.issues(owner, repo);
-    let mut count = 0;
 
     let mut summary = String::new();
     if let EventPayload::IssueCommentEvent(e) = payload {
@@ -46,8 +45,7 @@ async fn handler(owner: &str, repo: &str, payload: EventPayload) {
         }
         match e.comment.body {
             Some(body) => {
-                log::error!("comment: {}", body);
-                if !body.starts_with(&format!("@{trigger_phrase}")) {
+                if !body.starts_with(&format!("{trigger_phrase}")) {
                     std::process::exit(1);
                 }
             }
@@ -83,8 +81,17 @@ async fn handler(owner: &str, repo: &str, payload: EventPayload) {
             .await
         {
             Ok(comments_page) => {
+                let count = comments_page.items.len();
+                if count < n_comments as usize {
+                    _ = issue_handle
+                    .update_comment(
+                        comment_id,
+                        "Please kindly be patient enough to read an issue with less than 5 comments!",
+                    )
+                    .await;
+                    return;
+                }
                 for comment in comments_page.items {
-                    count += 1;
                     let comment_body = match &comment.body {
                         Some(body) => squeeze_fit_remove_quoted(body, "```", 300, 0.6),
                         None => "".to_string(),
@@ -100,16 +107,7 @@ async fn handler(owner: &str, repo: &str, payload: EventPayload) {
 
             Err(_e) => log::error!("Error getting comments from issue: {}", _e),
         };
-        if count < 5 {
-            _ = issue_handle
-                .update_comment(
-                    comment_id,
-                    "Please kindly be patient enough to read an issue with less than 5 comments!",
-                )
-                .await;
-
-            return;
-        }
+        
 
         let all_text_from_issue = squeeze_fit_post_texts(&all_text_from_issue, 12_000, 0.4);
         let sys_prompt_1 = &format!(
