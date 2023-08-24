@@ -103,7 +103,6 @@ async fn handler(owner: &str, repo: &str, payload: EventPayload) {
                     all_text_from_issue.push_str(&commenter_input);
                 }
 
-                log::error!("{} comments found", count);
             }
 
             Err(_e) => log::error!("Error getting comments from issue: {}", _e),
