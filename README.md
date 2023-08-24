@@ -19,7 +19,7 @@ Can't spare the time to peruse lengthy issue posts? Let this bot lend a hand by 
 
 ## Usage
 
-To use the bot, mention it in a comment on an issue with the trigger phrase you define. You can also specify the minimum number of comments required on an issue before the bot activates.
+To use the bot, comment on an issue with the trigger phrase you define. You can also specify the minimum number of comments required on an issue before the bot activates.
 
 If you don't change the template, by default the bot will be triggered when an issue with 5 or more comments receives a comment containing @flows_summarize.
 
@@ -60,6 +60,10 @@ Next, you will tell the bot which GitHub repo it needs to monitor for issues to 
 * `github_repo` : The specific repo *you want the bot to monitor*.
 
 > For example, to deploy this bot on the `WasmEdge/wasmedge_hyper_demo repo`, you'd set `github_owner` to `WasmEdge` and `github_repo` to `wasmedge_hyper_demo`.
+| Name           | Value               |
+|----------------|---------------------|
+| `github_owner` | WasmEdge            |
+| `github_repo`  | wasmedge_hyper_demo |
 
 Click **Connect** or **+ Add new authentication** button to grant [flows.network](https://flows.network/) access to the GitHub repo to deploy the 🤖.
 
