@@ -15,6 +15,7 @@
 
 Can't afford the time to go through long issue posts? Let the bot help you by summarizing the current issue on the GitHub repo and post it as a comment. It could save your time and improve effiency.
 
+![](summarize-github-issue.gif)
 
 ## Usage
 
