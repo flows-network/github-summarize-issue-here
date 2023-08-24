@@ -59,11 +59,13 @@ Next, you will tell the bot which GitHub repo it needs to monitor for issues to 
 * `github_owner`: The GitHub org that owns the repo *you want to deploy the bot on*.
 * `github_repo` : The specific repo *you want the bot to monitor*.
 
-> For example, to deploy this bot on the `WasmEdge/wasmedge_hyper_demo repo`, you'd set `github_owner` to `WasmEdge` and `github_repo` to `wasmedge_hyper_demo`.
 | Name           | Value               |
 |----------------|---------------------|
 | `github_owner` | WasmEdge            |
 | `github_repo`  | wasmedge_hyper_demo |
+
+> For example, to deploy this bot on the `WasmEdge/wasmedge_hyper_demo repo`, you'd set `github_owner` to `WasmEdge` and `github_repo` to `wasmedge_hyper_demo`.
+
 
 Click **Connect** or **+ Add new authentication** button to grant [flows.network](https://flows.network/) access to the GitHub repo to deploy the 🤖.
 
